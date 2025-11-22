@@ -459,10 +459,15 @@ export async function importExcelAction(formData: FormData) {
   const file = formData.get('file') as File | null
   if (!file) return { ok: false, error: 'Missing file' }
   const arrayBuffer = await file.arrayBuffer()
-  const buffer = Buffer.from(arrayBuffer)
-  const result = await importWorkbook(buffer)
-  revalidatePath('/')
-  revalidatePath('/units')
-  revalidatePath('/clients')
-  return { ok: true, result }
+  try {
+    const result = await importWorkbook(arrayBuffer)
+    revalidatePath('/')
+    revalidatePath('/units')
+    revalidatePath('/clients')
+    const s = result.summary
+    redirect(`/admin/import?success=1&units=${s.units}&clients=${s.clients}`)
+  } catch (e: any) {
+    const msg = encodeURIComponent(String(e?.message || 'Import failed'))
+    redirect(`/admin/import?error=${msg}`)
+  }
 }

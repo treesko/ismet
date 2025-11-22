@@ -58,8 +58,8 @@ async function upsertClient(fullName?: string, phone?: string | null, residence?
   return prisma.client.create({ data: { fullName, phone: phone || undefined, residence: residence || undefined } })
 }
 
-export async function importWorkbook(buffer: Buffer) {
-  const wb = XLSX.read(buffer, { type: 'buffer' })
+export async function importWorkbook(buffer: ArrayBuffer) {
+  const wb = XLSX.read(buffer, { type: 'array' })
   const results: Record<string, SheetResult> = {}
   const sheetNames = wb.SheetNames
 
