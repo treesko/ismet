@@ -9,6 +9,8 @@ Environment variables
 - DATABASE_URL: Connection string for your DB (Postgres recommended for Vercel)
 - ADMIN_USER, ADMIN_PASS: Optional Basic Auth credentials to protect /admin/*, /blocks, /settings
 - PDF_SERVICE_URL: Optional HTTP endpoint that accepts { html } (JSON) and returns a PDF (application/pdf)
+  
+Important: Do not commit your local `.env` file. Ensure `.env` is gitignored and removed from the repo so Vercel uses the project Environment Variables instead of a local SQLite URL.
 
 Quick steps (using Postgres)
 1) Provision a Postgres database (e.g. Neon, Supabase, Render). Copy the connection string.
@@ -38,4 +40,3 @@ Notes & caveats
 - SQLite is not persistent on Vercel. Use Postgres for production persistence.
 - If you want more robust auth/roles, add NextAuth (email/password, OAuth) and roles. The current Basic Auth is meant for a simple single-user admin gate.
 - If you plan for high concurrency invoice numbering, consider Postgres and sequences.
-

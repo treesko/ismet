@@ -2,6 +2,7 @@ import PageHeader from '@/components/PageHeader'
 import { Button, Input, Select, Textarea } from '@/components/forms'
 import { prisma } from '@/lib/prisma'
 import { createUnit } from '@/lib/actions'
+export const dynamic = 'force-dynamic'
 
 export default async function NewUnitPage() {
   const [clients, blocks] = await Promise.all([

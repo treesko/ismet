@@ -1,4 +1,5 @@
 import { prisma } from '@/lib/prisma'
+export const dynamic = 'force-dynamic'
 
 export async function GET() {
   const byClient = await prisma.unit.groupBy({ by: ['clientId'], where: { clientId: { not: null } }, _sum: { remainingDebt: true }, _count: { _all: true } })
@@ -22,4 +23,3 @@ export async function GET() {
     }
   })
 }
-
