@@ -7,6 +7,7 @@ const exemptPaths = [
   '/login',
   '/api/login',
   '/api/logout',
+  '/api/me',
 ]
 
 export async function middleware(req: NextRequest) {
