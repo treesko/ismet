@@ -56,8 +56,8 @@ export default async function UnitsPage({ searchParams }: { searchParams: Record
   return (
     <div>
       <PageHeader title="Njësitë" />
-      <div className="mb-3 flex items-center justify-between">
-        <form className="grid grid-cols-2 gap-3 sm:grid-cols-6 items-end">
+      <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
+        <form className="grid grid-cols-1 gap-3 sm:grid-cols-6 items-end w-full md:w-auto">
           <select name="block" defaultValue={block} className="rounded-md border px-3 py-2">
             <option value="">Të gjitha blloqet</option>
             {blocks.map(b => (
@@ -79,7 +79,7 @@ export default async function UnitsPage({ searchParams }: { searchParams: Record
           <button className="rounded-md bg-brand px-3 py-2 text-white">Filtro</button>
           <a href="/units" className="rounded-md border px-3 py-2 text-gray-700">Pastro</a>
         </form>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2 w-full md:w-auto">
           <a href={`/api/export/units?${new URLSearchParams({ ...(block ? { block } : {}), ...(floor ? { floor: String(floor) } : {}), ...(status ? { status } : {}), ...(soldOnly ? { sold: '1' } : {}), ...(q ? { q } : {}) }).toString()}`} className="rounded-md border px-3 py-2 text-gray-700">Eksporto CSV</a>
           <a href="/blocks" className="rounded-md border px-3 py-2 text-gray-700">Menaxho blloqet</a>
           <a href="/units/new" className="rounded-md bg-brand px-3 py-2 text-white">Njësi e re</a>

@@ -51,7 +51,7 @@ export default async function UnitDetail({ params, searchParams }: { params: { i
         <div className="lg:col-span-2 space-y-6">
           <section className="rounded-lg border bg-white p-4">
             <h2 className="text-lg font-medium">Informacion bazë</h2>
-            <div className="mt-3 grid grid-cols-2 gap-3 text-sm">
+            <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
               <div><div className="text-gray-500">Blloku</div><div className="font-medium">{unit.block}</div></div>
               <div><div className="text-gray-500">Kati</div><div className="font-medium">{unit.floor ?? '-'}</div></div>
               <div><div className="text-gray-500">Apartamenti</div><div className="font-medium">{unit.apartmentNumber ?? '-'}</div></div>

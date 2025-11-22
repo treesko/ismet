@@ -74,8 +74,8 @@ export default async function InvoicesPage({ searchParams }: { searchParams: Rec
           <div className="mt-1 text-xl font-semibold text-brand">{counts.unpaid}</div>
         </a>
       </div>
-      <div className="mb-4 flex items-center justify-between">
-        <form className="grid grid-cols-1 gap-2 sm:grid-cols-7">
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+        <form className="grid grid-cols-1 gap-2 sm:grid-cols-7 w-full md:w-auto">
           <input name="clientId" placeholder="ID Klienti" defaultValue={clientId ?? ''} className="rounded-md border px-3 py-2" />
           <select name="status" defaultValue={status ?? ''} className="rounded-md border px-3 py-2">
             <option value="">Të gjitha</option>
@@ -93,7 +93,7 @@ export default async function InvoicesPage({ searchParams }: { searchParams: Rec
           <button className="rounded-md bg-brand px-3 py-2 text-white">Filtro</button>
           <a href="/invoices" className="rounded-md border px-3 py-2 text-gray-700">Pastro</a>
         </form>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
           <a href={`/api/export/invoices?${new URLSearchParams({ ...(clientId ? { clientId: String(clientId) } : {}), ...(status ? { status } : {}), ...(due ? { due } : {}), ...(startStr ? { start: startStr } : {}), ...(endStr ? { end: endStr } : {}) }).toString()}`} className="rounded-md border px-3 py-2 text-gray-700">Eksporto CSV</a>
           <a href="/invoices/new" className="rounded-md bg-brand px-3 py-2 text-white">Faturë e re</a>
         </div>

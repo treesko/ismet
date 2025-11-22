@@ -32,9 +32,9 @@ export default async function BlocksPage({ searchParams }: { searchParams: Recor
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <section className="rounded-lg border bg-white p-4">
           <h2 className="text-lg font-medium">Shto bllok</h2>
-          <form action={addBlock} className="mt-3 flex gap-2">
-            <Input label="Emri" name="name" placeholder="p.sh., 7A, 7B, Blloku C" required />
-            <div className="self-end"><Button type="submit">Shto</Button></div>
+          <form action={addBlock} className="mt-3 flex flex-col gap-2 sm:flex-row">
+            <div className="flex-1"><Input label="Emri" name="name" placeholder="p.sh., 7A, 7B, Blloku C" required /></div>
+            <div className="sm:self-end"><Button type="submit" className="w-full sm:w-auto">Shto</Button></div>
           </form>
           <div className="mt-2 text-xs text-gray-500">Emri duhet të jetë unik.</div>
         </section>
