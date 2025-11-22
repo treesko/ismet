@@ -65,7 +65,7 @@ export default async function InvoiceDetail({ params, searchParams }: { params: 
       {error && <div className="mb-4 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">{decodeURIComponent(error)}</div>}
 
       <div className="rounded-lg border bg-white p-6 print:p-0">
-        <div className="flex items-start justify-between">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div>
             <div className="flex items-start gap-3">
               {settings?.logoUrl && <img src={settings.logoUrl} alt="Logo" className="h-10 w-10 object-contain" />}
@@ -105,7 +105,7 @@ export default async function InvoiceDetail({ params, searchParams }: { params: 
           </div>
         </div>
 
-        <div className="mt-6 overflow-hidden rounded-md border">
+        <div className="mt-6 overflow-x-auto rounded-md border">
           <table className="min-w-full text-sm">
             <thead className="bg-gray-50">
               <tr>
@@ -136,7 +136,7 @@ export default async function InvoiceDetail({ params, searchParams }: { params: 
           {appliedToThis.length === 0 ? (
             <div className="text-gray-500">Nuk ka pagesa të aplikuara.</div>
           ) : (
-            <div className="overflow-hidden rounded-md border">
+            <div className="overflow-x-auto rounded-md border">
               <table className="min-w-full text-sm">
                 <thead className="bg-gray-50">
                   <tr>
@@ -174,7 +174,7 @@ export default async function InvoiceDetail({ params, searchParams }: { params: 
       {/* Alokimet e pagesave */}
       <section className="mt-6 rounded-lg border bg-white p-4 no-print">
           <h2 className="text-lg font-medium">Alokimet e pagesave</h2>
-        <div className="mt-3 overflow-hidden rounded-md border">
+        <div className="mt-3 overflow-x-auto rounded-md border">
           <table className="min-w-full text-sm">
             <thead className="bg-gray-50">
               <tr>
