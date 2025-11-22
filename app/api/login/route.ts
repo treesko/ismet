@@ -35,5 +35,5 @@ export async function POST(request: Request) {
     path: '/',
     maxAge: maxAgeDays * 24 * 60 * 60,
   })
-  return NextResponse.redirect(new URL(next || '/', request.url), { status: 302 })
+  return NextResponse.redirect(new URL(next || '/', request.url), { status: 303 })
 }
