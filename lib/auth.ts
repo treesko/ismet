@@ -54,10 +54,12 @@ async function hmacVerify(message: string, signature: string, secret: string): P
   const key = await importHmacKey(secret)
   try {
     const sigBytes = b64urlDecodeToBytes(signature)
-    const sigBuf = sigBytes.buffer.slice(sigBytes.byteOffset, sigBytes.byteOffset + sigBytes.byteLength)
+    const sigView = sigBytes.subarray(0)
+    const sigBuf = (sigView.buffer as ArrayBuffer).slice(sigView.byteOffset, sigView.byteOffset + sigView.byteLength)
     const msgBytes = te.encode(message)
-    const msgBuf = msgBytes.buffer.slice(msgBytes.byteOffset, msgBytes.byteOffset + msgBytes.byteLength)
-    return await crypto.subtle.verify('HMAC', key, sigBuf, msgBuf)
+    const msgView = msgBytes.subarray(0)
+    const msgBuf = (msgView.buffer as ArrayBuffer).slice(msgView.byteOffset, msgView.byteOffset + msgView.byteLength)
+    return await crypto.subtle.verify('HMAC', key, sigBuf as ArrayBuffer, msgBuf as ArrayBuffer)
   } catch {
     return false
   }
