@@ -27,13 +27,13 @@ export async function POST(request: Request) {
   const secret = process.env.SESSION_SECRET || 'change-me-in-production'
   const token = await signSession(payload, secret)
 
-  // Use cookies() to set response cookies in Route Handlers
-  cookies().set('session', token, {
+  const res = NextResponse.redirect(new URL(next || '/', request.url), { status: 303 })
+  res.cookies.set('session', token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
     path: '/',
     maxAge: maxAgeDays * 24 * 60 * 60,
   })
-  return NextResponse.redirect(new URL(next || '/', request.url), { status: 303 })
+  return res
 }

@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import { verifySession } from '@/lib/auth'
 
 // Protect everything except login, public assets, and public APIs
 const exemptPaths = [
@@ -24,16 +23,11 @@ export async function middleware(req: NextRequest) {
   }
 
   const token = req.cookies.get('session')?.value
-  const secret = process.env.SESSION_SECRET || 'change-me-in-production'
-  const session = await verifySession(token, secret)
-  if (!session) {
+  if (!token) {
     const url = req.nextUrl.clone()
     url.pathname = '/login'
     url.searchParams.set('next', pathname)
-    const res = NextResponse.redirect(url)
-    // Clear possibly invalid cookie
-    res.cookies.set('session', '', { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'lax', path: '/', maxAge: 0 })
-    return res
+    return NextResponse.redirect(url)
   }
   return NextResponse.next()
 }
