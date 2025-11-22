@@ -6,9 +6,9 @@ export function currency(n?: number | null): string {
 export function currencyWith(n?: number | null, settings?: { locale?: string | null, currencyCode?: string | null }): string {
   const value = typeof n === 'number' ? n : 0
   const locale = settings?.locale || 'de-DE'
-  const currency = settings?.currencyCode || 'EUR'
+  const curCode = settings?.currencyCode || 'EUR'
   try {
-    return new Intl.NumberFormat(locale, { style: 'currency', currency, maximumFractionDigits: 2 }).format(value)
+    return new Intl.NumberFormat(locale, { style: 'currency', currency: curCode, maximumFractionDigits: 2 }).format(value)
   } catch {
     return currency(value) // fallback to default
   }
