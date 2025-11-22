@@ -14,6 +14,16 @@ export default async function BlocksPage({ searchParams }: { searchParams: Recor
     await Promise.all(blocks.map(async (b) => [b.name, await prisma.unit.count({ where: { block: b.name } })]))
   ) as Record<string, number>
 
+  // Server action wrappers for correct TS signature
+  async function addBlock(formData: FormData): Promise<void> {
+    'use server'
+    await createBlock(formData)
+  }
+  async function removeBlock(formData: FormData): Promise<void> {
+    'use server'
+    await deleteBlockAction(formData)
+  }
+
   return (
     <div>
       <PageHeader title="Blloqet" breadcrumb={[{ href: '/', label: 'Paneli' }]} />
@@ -22,7 +32,7 @@ export default async function BlocksPage({ searchParams }: { searchParams: Recor
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <section className="rounded-lg border bg-white p-4">
           <h2 className="text-lg font-medium">Shto bllok</h2>
-          <form action={createBlock} className="mt-3 flex gap-2">
+          <form action={addBlock} className="mt-3 flex gap-2">
             <Input label="Emri" name="name" placeholder="p.sh., 7A, 7B, Blloku C" required />
             <div className="self-end"><Button type="submit">Shto</Button></div>
           </form>
@@ -39,7 +49,7 @@ export default async function BlocksPage({ searchParams }: { searchParams: Recor
                   <div className="font-medium">{b.name}</div>
                   <div className="text-gray-500">{counts[b.name] ?? 0} njësi</div>
                 </div>
-                <form action={deleteBlockAction}>
+                <form action={removeBlock}>
                   <input type="hidden" name="name" value={b.name} />
                   <ConfirmSubmit message="Të fshihet ky bllok?" className="rounded-md bg-red-600 px-3 py-2 text-white text-xs" disabled={(counts[b.name] ?? 0) > 0}>Fshi</ConfirmSubmit>
                 </form>
