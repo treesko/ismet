@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server'
+import { cookies } from 'next/headers'
 import { signSession } from '@/lib/auth'
+export const dynamic = 'force-dynamic'
 
 export async function POST(request: Request) {
   const form = await request.formData()
@@ -25,14 +27,13 @@ export async function POST(request: Request) {
   const secret = process.env.SESSION_SECRET || 'change-me-in-production'
   const token = await signSession(payload, secret)
 
-  const res = NextResponse.redirect(new URL(next || '/', request.url), { status: 302 })
-  res.cookies.set('session', token, {
+  // Use cookies() to set response cookies in Route Handlers
+  cookies().set('session', token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
     path: '/',
     maxAge: maxAgeDays * 24 * 60 * 60,
   })
-  return res
+  return NextResponse.redirect(new URL(next || '/', request.url), { status: 302 })
 }
-
