@@ -1,8 +1,8 @@
-export function Input({ label, name, type = 'text', defaultValue, required = false, step }: { label: string, name: string, type?: string, defaultValue?: any, required?: boolean, step?: string }) {
+export function Input({ label, name, type = 'text', defaultValue, required = false, step, placeholder }: { label: string, name: string, type?: string, defaultValue?: any, required?: boolean, step?: string, placeholder?: string }) {
   return (
     <label className="block text-sm">
       <div className="mb-1 text-gray-600">{label}</div>
-      <input name={name} type={type} defaultValue={defaultValue} required={required} step={step}
+      <input name={name} type={type} defaultValue={defaultValue} required={required} step={step} placeholder={placeholder}
         className="w-full rounded-md border px-3 py-2 outline-none focus:ring-2 focus:ring-brand" />
     </label>
   )
@@ -33,4 +33,3 @@ export function Button({ children, variant = 'primary', className = '', ...rest 
   const styles = variant === 'primary' ? 'bg-brand text-white hover:bg-brand-dark' : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
   return <button className={`${base} ${styles} ${className}`} {...rest}>{children}</button>
 }
-
