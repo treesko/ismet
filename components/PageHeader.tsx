@@ -15,8 +15,7 @@ export default function PageHeader({ title, breadcrumb }: { title: string, bread
           ))}
         </div>
       )}
-      <h1 className="text-2xl font-semibold">{title}</h1>
+      <h1 className="text-3xl font-bold bg-gradient-to-r from-brand to-accent-purple bg-clip-text text-transparent">{title}</h1>
     </div>
   )
 }
-

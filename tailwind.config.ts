@@ -12,6 +12,15 @@ const config: Config = {
           DEFAULT: '#0ea5e9',
           dark: '#0284c7',
         },
+        accent: {
+          purple: '#8b5cf6',
+          pink: '#ec4899',
+          amber: '#f59e0b',
+          emerald: '#10b981',
+        }
+      },
+      boxShadow: {
+        card: '0 4px 24px rgba(2, 132, 199, 0.08)',
       },
     },
   },
@@ -19,4 +28,3 @@ const config: Config = {
 }
 
 export default config
-

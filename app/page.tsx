@@ -56,9 +56,9 @@ export default async function Dashboard() {
 
       {/* Tregues kryesorë */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard label="Totali i njësive" value={unitsCount} href="/units" />
-        <StatCard label="Njësitë e shitura" value={soldUnitsCount} href="/units?sold=1" />
-        <StatCard label="Të ardhura të pritshme" value={currencyWith(totalExpected, settings || undefined)} href="/units" />
+        <StatCard label="Totali i njësive" value={unitsCount} href="/units" color="emerald" />
+        <StatCard label="Njësitë e shitura" value={soldUnitsCount} href="/units?sold=1" color="amber" />
+        <StatCard label="Të ardhura të pritshme" value={currencyWith(totalExpected, settings || undefined)} href="/units" color="purple" />
         <StatCard label="Totali i paguar" value={currencyWith(totalPaid, settings || undefined)} sublabel={`Mbetur ${currencyWith(totalRemaining, settings || undefined)}`} href="/invoices" />
       </div>
 
@@ -75,27 +75,36 @@ export default async function Dashboard() {
 
       {/* Ky muaj */}
       <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-4">
-        <a href={`/invoices?start=${monthStart.toISOString().slice(0,10)}&end=${nextMonthStart.toISOString().slice(0,10)}`} className="rounded-lg border bg-white p-4 transition hover:shadow-md block">
+        <a href={`/invoices?start=${monthStart.toISOString().slice(0,10)}&end=${nextMonthStart.toISOString().slice(0,10)}`} className="card block transition hover:shadow-lg">
+          <div className="card-content">
           <div className="text-sm text-gray-500">Faturuar (këtë muaj)</div>
           <div className="mt-1 text-2xl font-semibold">{currencyWith(invoicedThisMonth, settings || undefined)}</div>
+          </div>
         </a>
-        <a href={`/payments?start=${monthStart.toISOString().slice(0,10)}&end=${nextMonthStart.toISOString().slice(0,10)}`} className="rounded-lg border bg-white p-4 transition hover:shadow-md block">
+        <a href={`/payments?start=${monthStart.toISOString().slice(0,10)}&end=${nextMonthStart.toISOString().slice(0,10)}`} className="card block transition hover:shadow-lg">
+          <div className="card-content">
           <div className="text-sm text-gray-500">Arkëtuar (këtë muaj)</div>
           <div className="mt-1 text-2xl font-semibold">{currencyWith(collectedThisMonth, settings || undefined)}</div>
+          </div>
         </a>
-        <a href={`/clients?start=${monthStart.toISOString().slice(0,10)}&end=${nextMonthStart.toISOString().slice(0,10)}`} className="rounded-lg border bg-white p-4 transition hover:shadow-md block">
+        <a href={`/clients?start=${monthStart.toISOString().slice(0,10)}&end=${nextMonthStart.toISOString().slice(0,10)}`} className="card block transition hover:shadow-lg">
+          <div className="card-content">
           <div className="text-sm text-gray-500">Klientë të rinj (këtë muaj)</div>
           <div className="mt-1 text-2xl font-semibold">{newClientsThisMonth}</div>
+          </div>
         </a>
-        <div className="rounded-lg border bg-white p-4">
+        <div className="card">
+          <div className="card-content">
           <div className="text-sm text-gray-500">Ndryshimi neto</div>
           <div className={`mt-1 text-2xl font-semibold ${netChange >= 0 ? 'text-green-700' : 'text-red-700'}`}>{currencyWith(netChange, settings || undefined)}</div>
+          </div>
         </div>
       </div>
 
       {/* Trends */}
       <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <div className="rounded-lg border bg-white p-4">
+        <div className="card">
+          <div className="card-content">
           <div className="text-sm font-medium">Faturat 6 muajt e fundit</div>
           <div className="mt-3 flex items-end gap-2">
             {invoicesTrend.map((v, i) => {
@@ -105,8 +114,10 @@ export default async function Dashboard() {
             })}
           </div>
           <div className="mt-2 text-xs text-gray-500">{monthRanges.map(m => m.key).join('  ')}</div>
+          </div>
         </div>
-        <div className="rounded-lg border bg-white p-4">
+        <div className="card">
+          <div className="card-content">
           <div className="text-sm font-medium">Arkëtimet 6 muajt e fundit</div>
           <div className="mt-3 flex items-end gap-2">
             {paymentsTrend.map((v, i) => {
@@ -116,6 +127,7 @@ export default async function Dashboard() {
             })}
           </div>
           <div className="mt-2 text-xs text-gray-500">{monthRanges.map(m => m.key).join('  ')}</div>
+          </div>
         </div>
       </div>
 
