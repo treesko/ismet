@@ -1,0 +1,133 @@
+// Prisma schema for Apartment Sales Manager
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Block {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Client {
+  id        Int      @id @default(autoincrement())
+  fullName  String
+  residence String?  // Vendbanimi
+  phone     String?
+  email     String?
+  units     Unit[]
+  payments  Payment[]
+  invoices  Invoice[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([fullName])
+  @@index([phone])
+}
+
+model Unit {
+  id               Int        @id @default(autoincrement())
+  block            String
+  listNumber       Int?       // Nr
+  floor            Int?
+  apartmentNumber  String?    // Nr B ne Kat (string to allow A/B suffixes)
+  areaM2           Float?
+  pricePerM2       Float?
+  totalPrice       Float?     // Vlera e shitjes
+  saleDate         DateTime?  // Data e shitjes
+  contractInfo     String?
+  totalPaid        Float?     @default(0)
+  remainingDebt    Float?     @default(0)
+  paymentProgress  Float?     @default(0)
+  comments         String?
+  type             String     @default("APARTMENT")
+  clientId         Int?
+  client           Client?    @relation(fields: [clientId], references: [id])
+  payments         Payment[]
+  invoices         Invoice[]
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+
+  @@index([block])
+  @@index([type])
+  @@index([clientId])
+  @@index([floor])
+}
+
+model Payment {
+  id        Int      @id @default(autoincrement())
+  unitId    Int
+  clientId  Int
+  label     String?
+  date      DateTime?
+  amount    Float    @default(0)
+  unit      Unit     @relation(fields: [unitId], references: [id])
+  client    Client   @relation(fields: [clientId], references: [id])
+  allocations PaymentAllocation[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([unitId])
+  @@index([clientId])
+}
+
+model Invoice {
+  id                 Int      @id @default(autoincrement())
+  invoiceNumber      String   @unique
+  clientId           Int
+  unitId             Int
+  issueDate          DateTime
+  dueDate            DateTime
+  subtotal           Float    @default(0)
+  totalPaidOnInvoice Float    @default(0)
+  remainingOnInvoice Float    @default(0)
+  notes              String?
+  client             Client   @relation(fields: [clientId], references: [id])
+  unit               Unit     @relation(fields: [unitId], references: [id])
+  allocations        PaymentAllocation[]
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  @@index([clientId])
+  @@index([unitId])
+}
+
+model PaymentAllocation {
+  id        Int      @id @default(autoincrement())
+  paymentId Int
+  invoiceId Int
+  amount    Float    @default(0)
+  payment   Payment  @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+  invoice   Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([paymentId, invoiceId])
+  @@index([paymentId])
+  @@index([invoiceId])
+}
+
+model Settings {
+  id                  Int      @id @default(1)
+  companyName         String?
+  address1            String?
+  address2            String?
+  city                String?
+  country             String?
+  email               String?
+  phone               String?
+  taxId               String?
+  logoUrl             String?
+  currencyCode        String?  @default("EUR")
+  locale              String?  @default("de-DE")
+  invoiceNumberFormat String?  @default("YYYYMM-####")
+  dateFormat          String?  @default("dd/MM/yyyy")
+  updatedAt           DateTime @updatedAt
+}
