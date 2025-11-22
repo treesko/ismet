@@ -2,11 +2,17 @@ import PageHeader from '@/components/PageHeader'
 import { Button } from '@/components/forms'
 import { importExcelAction } from '@/lib/actions'
 
+// Wrap to satisfy TS: form action expects Promise<void>
+async function uploadAction(formData: FormData): Promise<void> {
+  'use server'
+  await importExcelAction(formData)
+}
+
 export default function ImportPage() {
   return (
     <div>
       <PageHeader title="Import Excel" breadcrumb={[{ href: '/', label: 'Paneli' }]} />
-      <form action={importExcelAction} className="max-w-lg space-y-4 rounded-lg border bg-white p-4" encType="multipart/form-data">
+      <form action={uploadAction} className="max-w-lg space-y-4 rounded-lg border bg-white p-4" encType="multipart/form-data">
         <div className="text-sm text-gray-600">
           Ngarko një skedar .xlsx. Emri i çdo flete bëhet Bllok (p.sh. "Banesat 7A" → blloku "7A").
         </div>
