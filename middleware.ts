@@ -1,29 +1,42 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import { verifySession } from '@/lib/auth'
 
-const protectedPrefixes = ['/admin', '/blocks', '/settings']
+// Protect everything except login, public assets, and public APIs
+const exemptPaths = [
+  '/login',
+  '/api/login',
+  '/api/logout',
+]
 
-export function middleware(req: NextRequest) {
+export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl
-  const needsAuth = protectedPrefixes.some(p => pathname.startsWith(p))
-  if (!needsAuth) return NextResponse.next()
 
-  const user = process.env.ADMIN_USER || ''
-  const pass = process.env.ADMIN_PASS || ''
-  if (!user || !pass) return NextResponse.next()
+  // Allow static files and images
+  if (
+    pathname.startsWith('/_next') ||
+    pathname.startsWith('/favicon.ico') ||
+    pathname.startsWith('/api/public') ||
+    exemptPaths.some(p => pathname.startsWith(p))
+  ) {
+    return NextResponse.next()
+  }
 
-  const auth = req.headers.get('authorization') || ''
-  const toB64 = (s: string) => (typeof btoa === 'function' ? btoa(s) : Buffer.from(s).toString('base64'))
-  const expected = 'Basic ' + toB64(`${user}:${pass}`)
-  if (auth !== expected) {
-    return new NextResponse('Authentication required', {
-      status: 401,
-      headers: { 'WWW-Authenticate': 'Basic realm="Restricted"' }
-    })
+  const token = req.cookies.get('session')?.value
+  const secret = process.env.SESSION_SECRET || 'change-me-in-production'
+  const session = await verifySession(token, secret)
+  if (!session) {
+    const url = req.nextUrl.clone()
+    url.pathname = '/login'
+    url.searchParams.set('next', pathname)
+    const res = NextResponse.redirect(url)
+    // Clear possibly invalid cookie
+    res.cookies.set('session', '', { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'lax', path: '/', maxAge: 0 })
+    return res
   }
   return NextResponse.next()
 }
 
 export const config = {
-  matcher: ['/((?!_next/static|_next/image|favicon.ico|api/public).*)'],
+  matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
 }

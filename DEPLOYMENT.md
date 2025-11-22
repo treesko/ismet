@@ -12,6 +12,12 @@ Environment variables
   
 Important: Do not commit your local `.env` file. Ensure `.env` is gitignored and removed from the repo so Vercel uses the project Environment Variables instead of a local SQLite URL.
 
+Auth (Login page)
+- Set `ADMIN_USER` and `ADMIN_PASS` to enable login.
+- Set `SESSION_SECRET` to a strong random string (used to sign the session cookie).
+- Visit `/login` to sign in. After signing in, an HTTP-only cookie authorizes access across the app.
+- `/api/logout` clears the session and redirects back to `/login`.
+
 Quick steps (using Postgres)
 1) Provision a Postgres database (e.g. Neon, Supabase, Render). Copy the connection string.
 2) In Vercel project settings → Environment Variables, set:
