@@ -29,15 +29,62 @@ export function statusFromTotals(totalPrice?: number | null, totalPaid?: number 
 }
 
 export function safeNumber(input: any): number | undefined {
-  const n = Number(String(input).replace(/[^0-9.-]/g, ''))
+  if (input == null || input === '') return undefined
+  if (typeof input === 'number') return Number.isFinite(input) ? input : undefined
+  let s = String(input).trim().replace(/\u00A0/g, ' ')
+  // Keep digits, separators and minus
+  s = s.replace(/[^0-9,.-]/g, '')
+  const lastComma = s.lastIndexOf(',')
+  const lastDot = s.lastIndexOf('.')
+  // Determine decimal separator by whichever appears last
+  let decimalSep: ',' | '.' | null = null
+  if (lastComma >= 0 || lastDot >= 0) {
+    decimalSep = lastComma > lastDot ? ',' : '.'
+  }
+  if (decimalSep === ',') {
+    // Remove thousand separators '.' and replace ',' with '.'
+    s = s.replace(/\./g, '')
+    s = s.replace(/,/g, '.')
+  } else if (decimalSep === '.') {
+    // Remove thousand separators ','
+    s = s.replace(/,/g, '')
+  } else {
+    // No clear decimal; remove all separators except leading minus
+    s = s.replace(/[,\.]/g, '')
+  }
+  const n = Number(s)
   return Number.isFinite(n) ? n : undefined
 }
 
 export function parseDate(input: any): Date | undefined {
   if (!input) return undefined
-  const d = new Date(input)
-  if (isNaN(d.getTime())) return undefined
-  return d
+  if (input instanceof Date) return isNaN(input.getTime()) ? undefined : input
+  if (typeof input === 'number') {
+    // Excel serial date detection (rough range)
+    if (input > 10000 && input < 100000) {
+      const excelEpoch = Date.UTC(1899, 11, 30)
+      const ms = Math.round(input * 86400 * 1000)
+      return new Date(excelEpoch + ms)
+    }
+    const d = new Date(input)
+    return isNaN(d.getTime()) ? undefined : d
+  }
+  const s = String(input).trim()
+  // Try common formats: dd/MM/yyyy, dd.MM.yyyy, yyyy-MM-dd
+  let m = s.match(/^(\d{1,2})[\/\.](\d{1,2})[\/\.](\d{4})$/)
+  if (m) {
+    const d = Number(m[1]), mo = Number(m[2]) - 1, y = Number(m[3])
+    const date = new Date(y, mo, d)
+    return isNaN(date.getTime()) ? undefined : date
+  }
+  m = s.match(/^(\d{4})-(\d{2})-(\d{2})$/)
+  if (m) {
+    const y = Number(m[1]), mo = Number(m[2]) - 1, d = Number(m[3])
+    const date = new Date(y, mo, d)
+    return isNaN(date.getTime()) ? undefined : date
+  }
+  const d = new Date(s)
+  return isNaN(d.getTime()) ? undefined : d
 }
 
 export function formatDateWith(d?: Date | string | null, settings?: { locale?: string | null, dateFormat?: string | null }): string {
