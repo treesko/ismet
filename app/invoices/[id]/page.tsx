@@ -44,6 +44,20 @@ export default async function InvoiceDetail({ params, searchParams }: { params: 
   const appliedToThis = [...explicitApplied, ...fifoApplied]
   const appliedSum = appliedToThis.reduce((s, c) => s + (c.amount || 0), 0)
 
+  // Server action wrappers for TS
+  async function saveInvoice(formData: FormData): Promise<void> {
+    'use server'
+    await updateInvoice(formData)
+  }
+  async function addAlloc(formData: FormData): Promise<void> {
+    'use server'
+    await addAllocation(formData)
+  }
+  async function delAlloc(formData: FormData): Promise<void> {
+    'use server'
+    await deleteAllocationAction(formData)
+  }
+
   return (
     <div>
       <PageHeader title={`Fatura ${inv.invoiceNumber}`} breadcrumb={[{ href: '/invoices', label: 'Faturat' }]} />
@@ -159,7 +173,7 @@ export default async function InvoiceDetail({ params, searchParams }: { params: 
 
       {/* Alokimet e pagesave */}
       <section className="mt-6 rounded-lg border bg-white p-4 no-print">
-        <h2 className="text-lg font-medium">Alokimet e pagesave</h2>
+          <h2 className="text-lg font-medium">Alokimet e pagesave</h2>
         <div className="mt-3 overflow-hidden rounded-md border">
           <table className="min-w-full text-sm">
             <thead className="bg-gray-50">
@@ -180,7 +194,7 @@ export default async function InvoiceDetail({ params, searchParams }: { params: 
                   <td className="px-3 py-2">{formatDateWith(a.payment.date, settings || undefined)}</td>
                   <td className="px-3 py-2 text-right">{currencyWith(a.amount, settings || undefined)}</td>
                   <td className="px-3 py-2 text-right">
-                    <form action={deleteAllocationAction}>
+                    <form action={delAlloc}>
                       <input type="hidden" name="id" value={a.id} />
                       <button className="rounded-md bg-red-600 px-3 py-1.5 text-xs text-white">Hiqe</button>
                     </form>
@@ -192,7 +206,7 @@ export default async function InvoiceDetail({ params, searchParams }: { params: 
         </div>
         <div className="mt-3">
           <h3 className="text-sm font-medium">Shto / përditëso alokimin</h3>
-          <form action={addAllocation} className="mt-2 grid grid-cols-1 gap-3 sm:grid-cols-5">
+          <form action={addAlloc} className="mt-2 grid grid-cols-1 gap-3 sm:grid-cols-5">
             <input type="hidden" name="invoiceId" value={inv.id} />
             <select name="paymentId" className="rounded-md border px-3 py-2 sm:col-span-3" required>
               <option value="">Zgjidh pagesën</option>
@@ -210,7 +224,7 @@ export default async function InvoiceDetail({ params, searchParams }: { params: 
       <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-3 no-print">
         <section className="rounded-lg border bg-white p-4 lg:col-span-2">
           <h2 className="text-lg font-medium">Përpuno faturën</h2>
-          <form action={updateInvoice} className="mt-3 space-y-3">
+          <form action={saveInvoice} className="mt-3 space-y-3">
             <input type="hidden" name="id" value={inv.id} />
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <Select label="Klienti" name="clientId" defaultValue={inv.clientId} required>

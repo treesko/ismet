@@ -5,15 +5,22 @@ import { createClient } from '@/lib/actions'
 export default function NewClientPage() {
   return (
     <div>
-      <PageHeader title="New Client" breadcrumb={[{ href: '/clients', label: 'Clients' }]} />
-      <form action={createClient} className="mx-auto max-w-lg space-y-3 rounded-lg border bg-white p-4">
-        <Input label="Full name" name="fullName" required />
-        <Input label="Residence" name="residence" />
-        <Input label="Phone" name="phone" />
-        <Input label="Email" name="email" type="email" />
-        <Button type="submit">Create</Button>
-      </form>
+      <PageHeader title="Klient i ri" breadcrumb={[{ href: '/clients', label: 'Klientët' }]} />
+      {(() => {
+        async function createAction(formData: FormData): Promise<void> {
+          'use server'
+          await createClient(formData)
+        }
+        return (
+          <form action={createAction} className="mx-auto max-w-lg space-y-3 rounded-lg border bg-white p-4">
+            <Input label="Emri i plotë" name="fullName" required />
+            <Input label="Vendbanimi" name="residence" />
+            <Input label="Telefoni" name="phone" />
+            <Input label="Email" name="email" type="email" />
+            <Button type="submit">Krijo</Button>
+          </form>
+        )
+      })()}
     </div>
   )
 }
-

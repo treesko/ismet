@@ -18,6 +18,28 @@ export default async function UnitDetail({ params, searchParams }: { params: { i
   const success = typeof searchParams.success === 'string' ? searchParams.success : undefined
   const error = typeof searchParams.error === 'string' ? searchParams.error : undefined
 
+  // Server action wrappers for TS
+  async function savePayment(formData: FormData): Promise<void> {
+    'use server'
+    await updatePayment(formData)
+  }
+  async function removePayment(formData: FormData): Promise<void> {
+    'use server'
+    await deletePayment(formData)
+  }
+  async function addPaymentAction(formData: FormData): Promise<void> {
+    'use server'
+    await addPayment(formData)
+  }
+  async function saveUnitFull(formData: FormData): Promise<void> {
+    'use server'
+    await updateUnitFull(formData)
+  }
+  async function removeUnit(formData: FormData): Promise<void> {
+    'use server'
+    await deleteUnitAction(formData)
+  }
+
   return (
     <div>
       <PageHeader title={`Njësia ${unit.block}-${unit.apartmentNumber || unit.listNumber || unit.id}`} breadcrumb={[{ href: '/units', label: 'Njësitë' }]} />
@@ -51,7 +73,7 @@ export default async function UnitDetail({ params, searchParams }: { params: { i
               {unit.payments.map((p) => (
                 <li key={p.id} className="rounded-md border p-3">
                   <div className="grid grid-cols-1 gap-3 sm:grid-cols-6 text-sm items-end">
-                    <form action={updatePayment} className="contents">
+                    <form action={savePayment} className="contents">
                       <input type="hidden" name="id" value={p.id} />
                       <input type="hidden" name="unitId" value={unit.id} />
                       <input type="hidden" name="clientId" value={unit.clientId || ''} />
@@ -63,7 +85,7 @@ export default async function UnitDetail({ params, searchParams }: { params: { i
                       </div>
                     </form>
                     <div className="sm:col-span-6 flex justify-end">
-                      <form action={deletePayment}>
+                      <form action={removePayment}>
                         <input type="hidden" name="id" value={p.id} />
                         <input type="hidden" name="unitId" value={unit.id} />
                         <ConfirmSubmit message="Të fshihet kjo pagesë?" className="rounded-md bg-red-600 px-3 py-2 text-white text-sm">Fshi</ConfirmSubmit>
@@ -78,7 +100,7 @@ export default async function UnitDetail({ params, searchParams }: { params: { i
 
           <section className="rounded-lg border bg-white p-4">
             <h2 className="text-lg font-medium">Shto pagesë</h2>
-            <form action={addPayment} className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-4">
+            <form action={addPaymentAction} className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-4">
               <input type="hidden" name="unitId" value={unit.id} />
               <input type="hidden" name="clientId" value={unit.clientId || ''} />
               <Input label="Përshkrimi" name="label" defaultValue="Pagesë" />
@@ -117,7 +139,7 @@ export default async function UnitDetail({ params, searchParams }: { params: { i
 
           <section className="rounded-lg border bg-white p-4">
             <h2 className="text-lg font-medium">Përpuno njësinë</h2>
-            <form action={updateUnitFull} className="mt-3 space-y-3">
+            <form action={saveUnitFull} className="mt-3 space-y-3">
               <input type="hidden" name="id" value={unit.id} />
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               {blocks.length > 0 ? (
@@ -157,7 +179,7 @@ export default async function UnitDetail({ params, searchParams }: { params: { i
 
           <section className="rounded-lg border bg-white p-4">
             <h2 className="text-lg font-medium">Zonë e rrezikshme</h2>
-            <form action={deleteUnitAction} className="mt-3">
+            <form action={removeUnit} className="mt-3">
               <input type="hidden" name="id" value={unit.id} />
               <ConfirmSubmit message="Jeni i sigurt që doni ta fshini këtë njësi?" className="rounded-md bg-red-600 px-3 py-2 text-sm text-white">Fshi njësinë</ConfirmSubmit>
             </form>

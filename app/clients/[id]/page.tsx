@@ -107,14 +107,23 @@ export default async function ClientDetail({ params, searchParams }: { params: {
         <aside className="space-y-6 lg:col-span-1">
           <section className="rounded-lg border bg-white p-4">
             <h2 className="text-lg font-medium">Përpuno klientin</h2>
-            <form action={updateClient} className="mt-3 space-y-3">
-              <input type="hidden" name="id" value={client.id} />
-              <Input label="Emri i plotë" name="fullName" defaultValue={client.fullName} required />
-              <Input label="Vendbanimi" name="residence" defaultValue={client.residence || ''} />
-              <Input label="Telefoni" name="phone" defaultValue={client.phone || ''} />
-              <Input label="Email" name="email" type="email" defaultValue={client.email || ''} />
-              <Button type="submit">Ruaj</Button>
-            </form>
+            {/* Server action wrapper to satisfy TS signature */}
+            {(() => {
+              async function saveClient(formData: FormData): Promise<void> {
+                'use server'
+                await updateClient(formData)
+              }
+              return (
+                <form action={saveClient} className="mt-3 space-y-3">
+                  <input type="hidden" name="id" value={client.id} />
+                  <Input label="Emri i plotë" name="fullName" defaultValue={client.fullName} required />
+                  <Input label="Vendbanimi" name="residence" defaultValue={client.residence || ''} />
+                  <Input label="Telefoni" name="phone" defaultValue={client.phone || ''} />
+                  <Input label="Email" name="email" type="email" defaultValue={client.email || ''} />
+                  <Button type="submit">Ruaj</Button>
+                </form>
+              )
+            })()}
           </section>
 
           <section className="rounded-lg border bg-white p-4">
