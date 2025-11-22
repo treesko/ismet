@@ -10,6 +10,7 @@ type SheetResult = {
   remainingDebt: number
 }
 
+// Known header labels (we will also fuzzy-match them)
 const HEADERS = {
   nr: ['Nr'],
   floor: ['Kati'],
@@ -23,7 +24,7 @@ const HEADERS = {
   pricePerM2: ['Cmimi njësi [€/m2]', 'Çmimi njësi [€/m2]', 'Cmimi njesi [€/m2]'],
   totalPrice: ['Vlera e shitjes [€]'],
   totalPaid: ['Total te paguara [€]', 'Totali i paguar [€]'],
-  remainingDebt: ['Borgji i mbetur [€]'],
+  remainingDebt: ['Borgji i mbetur [€]', 'Borxhi i mbetur [€]'],
   paymentProgress: ['Progresi i pagesës [%]'],
   comments: ['Komente'],
   // Payments Pjesa I - IV
@@ -35,14 +36,37 @@ const HEADERS = {
   p3Amt: ['Pjesa III Vlera [€]', 'Pjesa III - Vlera [€]', 'Vlera Pjesa III [€]'],
   p4Date: ['Pjesa IV Data', 'Pjesa IV - Data', 'Data Pjesa IV'],
   p4Amt: ['Pjesa IV Vlera [€]', 'Pjesa IV - Vlera [€]', 'Vlera Pjesa IV [€]'],
+} as const
+
+// Basic fuzzy normalization: lower-case, remove diacritics, punctuation, and extra spaces
+function norm(s: string): string {
+  return s
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/\p{Diacritic}+/gu, '')
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim()
+}
+
+const EXTRA_SYNONYMS: Partial<Record<keyof typeof HEADERS, string[]>> = {
+  nr: ['nr', 'numri', 'numri i listes', 'nr i listes', 'nr listes'],
+  nrOnFloor: ['nr b ne kat', 'nr b ne kat', 'nr banese ne kat', 'nr ne kat'],
+  area: ['siperfaqja m2', 'siperfaqe m2', 'siperfaqja'],
+  pricePerM2: ['cmimi njesi eur m2', 'cmimi m2', 'cmimi per m2'],
+  totalPaid: ['totali i paguar', 'total te paguara'],
+  remainingDebt: ['borxhi i mbetur', 'borgji i mbetur'],
+  paymentProgress: ['progresi i pageses'],
+  phone: ['nr kontaktues', 'nr kontakt'],
 }
 
 function normalizeHeaders(row: Record<string, any>) {
   const map: Record<keyof typeof HEADERS, string | undefined> = {} as any
   const keys = Object.keys(row)
+  const normKeys = keys.map(k => ({ raw: k, n: norm(k) }))
   for (const key in HEADERS) {
-    const candidates = (HEADERS as any)[key] as string[]
-    map[key as keyof typeof HEADERS] = keys.find(k => candidates.includes(k))
+    const candidates = ([...(HEADERS as any)[key], ...((EXTRA_SYNONYMS as any)[key] || [])] as string[]).map(norm)
+    const hit = normKeys.find(k => candidates.some(c => k.n === c || k.n.includes(c)))
+    map[key as keyof typeof HEADERS] = hit?.raw
   }
   return map
 }
