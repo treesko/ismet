@@ -1,6 +1,8 @@
 import './globals.css'
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import dynamic from 'next/dynamic'
+const MobileNav = dynamic(() => import('@/components/MobileNav'), { ssr: false })
 
 export const metadata: Metadata = {
   title: 'Apartment Sales Manager',
@@ -28,15 +30,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </header>
         <main className="mx-auto max-w-7xl px-4 py-6">{children}</main>
         {/* Mobile bottom nav */}
-        <nav className="fixed bottom-0 left-0 right-0 z-40 border-t bg-white/90 backdrop-blur sm:hidden">
-          <div className="mx-auto flex max-w-7xl items-stretch justify-between px-2 py-1">
-            <a href="/" className="flex flex-1 flex-col items-center py-2 text-xs text-gray-600 hover:text-brand">Home</a>
-            <a href="/units" className="flex flex-1 flex-col items-center py-2 text-xs text-gray-600 hover:text-brand">Units</a>
-            <a href="/invoices" className="flex flex-1 flex-col items-center py-2 text-xs text-gray-600 hover:text-brand">Invoices</a>
-            <a href="/clients" className="flex flex-1 flex-col items-center py-2 text-xs text-gray-600 hover:text-brand">Clients</a>
-            <a href="/settings" className="flex flex-1 flex-col items-center py-2 text-xs text-gray-600 hover:text-brand">Settings</a>
-          </div>
-        </nav>
+        <MobileNav />
       </body>
     </html>
   )

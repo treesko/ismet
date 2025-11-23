@@ -20,7 +20,8 @@ export default async function SettingsPage({ searchParams }: { searchParams: Rec
           await saveSettings(formData)
         }
         return (
-          <form action={saveSettingsAction} className="mx-auto max-w-2xl space-y-4 rounded-lg border bg-white p-4">
+          <form action={saveSettingsAction} className="mx-auto max-w-2xl space-y-4 card">
+            <div className="card-content space-y-4">
             <Input label="Emri i kompanisë" name="companyName" defaultValue={s?.companyName ?? ''} />
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <Input label="Adresa 1" name="address1" defaultValue={s?.address1 ?? ''} />
@@ -44,7 +45,8 @@ export default async function SettingsPage({ searchParams }: { searchParams: Rec
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
               <Input label="Formati i datës" name="dateFormat" defaultValue={s?.dateFormat ?? 'dd/MM/yyyy'} />
             </div>
-            <Button type="submit">Ruaj</Button>
+            <Button type="submit" className="w-full sm:w-auto">Ruaj</Button>
+            </div>
           </form>
         )
       })()}
