@@ -86,7 +86,11 @@ export default async function UnitsPage({ searchParams }: { searchParams: Record
         </div>
       </div>
 
-      <DataTable columns={columns as any} data={filtered.map(u => ({ ...u, id: u.id, client: u.client })) as any} />
+      <div className="card">
+        <div className="card-content">
+          <DataTable columns={columns as any} data={filtered.map(u => ({ ...u, id: u.id, client: u.client })) as any} />
+        </div>
+      </div>
 
       <div className="mt-4 text-sm text-gray-500">Kliko një rresht për të parë detajet.</div>
       <div className="mt-2 text-sm">

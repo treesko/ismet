@@ -98,7 +98,7 @@ export default async function InvoicesPage({ searchParams }: { searchParams: Rec
           <a href="/invoices/new" className="rounded-md bg-brand px-3 py-2 text-white">Faturë e re</a>
         </div>
       </div>
-      <DataTable columns={columns as any} data={invoices as any} />
+      <div className="card"><div className="card-content"><DataTable columns={columns as any} data={invoices as any} /></div></div>
     </div>
   )
 }

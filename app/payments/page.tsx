@@ -42,7 +42,7 @@ export default async function PaymentsPage({ searchParams }: { searchParams: Rec
           <a href={`/api/export/payments${startStr || endStr ? `?${new URLSearchParams({ ...(startStr ? { start: startStr } : {}), ...(endStr ? { end: endStr } : {}) }).toString()}` : ''}`} className="rounded-md border px-3 py-2 text-gray-700">Eksporto CSV</a>
         </form>
       </div>
-      <DataTable columns={columns as any} data={payments as any} />
+      <div className="card"><div className="card-content"><DataTable columns={columns as any} data={payments as any} /></div></div>
     </div>
   )
 }

@@ -52,7 +52,7 @@ export default async function ClientsPage({ searchParams }: { searchParams: Reco
         </form>
         <a href="/clients/new" className="rounded-md bg-brand px-3 py-2 text-white">Klient i ri</a>
       </div>
-      <DataTable columns={columns as any} data={rows as any} />
+      <div className="card"><div className="card-content"><DataTable columns={columns as any} data={rows as any} /></div></div>
     </div>
   )
 }
