@@ -24,7 +24,7 @@ export default function MobileNav() {
   const pathname = usePathname() || '/'
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-40 border-t bg-white/90 backdrop-blur sm:hidden">
-      <div className="mx-auto flex max-w-7xl items-stretch justify-between px-2 py-1">
+      <div className="mx-auto flex max-w-7xl items-stretch justify-between px-2 py-1 pb-[calc(env(safe-area-inset-bottom,0px)+6px)]">
         {items.map((item) => {
           const active = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href))
           return (
